@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Demo Mode · UserFlow{% endblock %}
+
+{% block content %}
+
+<div class="confirm-card">
+
+    <div class="confirm-icon">ℹ️</div>
+
+    <h1>Demo Mode</h1>
+
+    <p class="subtitle">
+        This application is currently running in demonstration mode.
+    </p>
+
+    <p class="subtitle">
+        Database functionality is temporarily unavailable because
+        a cloud database has not yet been configured.
+    </p>
+
+    <div class="form-actions" style="justify-content:center;">
+
+        <a href="/" class="btn btn-primary">
+            Return to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

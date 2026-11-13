@@ -1,24 +1,258 @@
 {% extends "base.html" %}
-{% block title %}Dashboard · UserFlow{% endblock %}
+
+{% block title %}Dashboard | UserFlow{% endblock %}
+
 {% block content %}
+
 <header class="topbar">
-    <div><p class="eyebrow">Overview</p><h1>Good to see you</h1><p class="subtitle">Manage your registered users from one place.</p></div>
-    <a href="/Add/" class="btn btn-primary">＋ Add user</a>
-</header>
-<section class="stats">
-    <div class="stat-card"><div class="stat-icon">♙</div><div><div class="stat-label">REGISTERED USERS</div><div class="stat-number">{{ user_count }}</div></div></div>
-    <div class="stat-card"><div class="stat-icon">✓</div><div><div class="stat-label">DIRECTORY STATUS</div><div class="stat-number">Active</div></div></div>
-    <div class="stat-card"><div class="stat-icon">⌕</div><div><div class="stat-label">QUICK SEARCH</div><div class="stat-number">Ready</div></div></div>
-</section>
-<section class="panel">
-    <div class="panel-head"><div><h2>All users</h2><p class="subtitle">Your complete user directory</p></div>
-        <form class="search" method="get"><input type="search" name="q" value="{{ query }}" placeholder="Search name or email..." aria-label="Search users"><button class="btn btn-primary" type="submit">Search</button></form>
+
+    <div>
+        <p class="eyebrow">Overview</p>
+
+        <h1>Good to see you</h1>
+
+        <p class="subtitle">
+            Manage your registered users from one place.
+        </p>
     </div>
-    {% if query %}<p class="subtitle">Showing results for “{{ query }}” · <a href="/" style="color:var(--blue);font-weight:700">Clear</a></p>{% endif %}
-    {% if records %}
-    <div class="table-wrap"><table><thead><tr><th>User</th><th>Email</th><th>Mobile</th><th>Date of birth</th><th>Actions</th></tr></thead><tbody>
-    {% for rec in records %}<tr><td><div class="name-cell"><img src="{{ rec.photo.url }}" class="avatar" alt="{{ rec.name }}">{{ rec.name }}</div></td><td class="email">{{ rec.email }}</td><td>{{ rec.mobile_number }}</td><td>{{ rec.date_of_birth }}</td><td><div class="actions"><a class="action-link" href="/View/{{ rec.id }}">View</a><a class="action-link" href="/Edit/{{ rec.id }}">Edit</a><a class="action-link" href="/Delete/{{ rec.id }}">Delete</a></div></td></tr>{% endfor %}
-    </tbody></table></div>
-    {% else %}<div class="empty"><h2>No users found</h2><p>Try another search or add your first user.</p><a href="/Add/" class="btn btn-primary">Add user</a></div>{% endif %}
+
+    {% if not demo_mode %}
+        <a href="/Add/" class="btn btn-primary">
+            + Add User
+        </a>
+    {% endif %}
+
+</header>
+
+
+{% if demo_mode %}
+
+<div class="panel" style="margin-bottom:25px;">
+
+    <h2>Demonstration Mode</h2>
+
+    <p class="subtitle">
+        You are viewing the live demonstration of UserFlow.
+        Database operations are temporarily disabled.
+    </p>
+
+</div>
+
+{% endif %}
+
+
+<section class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-icon">#</div>
+
+        <div>
+
+            <div class="stat-label">
+                REGISTERED USERS
+            </div>
+
+            <div class="stat-number">
+                {{ user_count }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">✓</div>
+
+        <div>
+
+            <div class="stat-label">
+                DIRECTORY STATUS
+            </div>
+
+            <div class="stat-number">
+                Active
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">⌕</div>
+
+        <div>
+
+            <div class="stat-label">
+                APPLICATION MODE
+            </div>
+
+            <div class="stat-number">
+                {% if demo_mode %}
+                    Demo
+                {% else %}
+                    Live
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
+
+
+<section class="panel">
+
+    <div class="panel-head">
+
+        <div>
+
+            <h2>All Users</h2>
+
+            <p class="subtitle">
+                Your registered user directory.
+            </p>
+
+        </div>
+
+
+        {% if not demo_mode %}
+
+        <form class="search" method="get">
+
+            <input
+                type="search"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search name or email..."
+                aria-label="Search users"
+            >
+
+            <button class="btn btn-primary" type="submit">
+                Search
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if demo_mode %}
+
+        <div class="empty">
+
+            <h2>No database connected</h2>
+
+            <p>
+                User records will appear here once a cloud database
+                is configured.
+            </p>
+
+        </div>
+
+    {% elif records %}
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for user in records %}
+
+                    <tr>
+
+                        <td>
+                            <img
+                                src="{{ user.photo.url }}"
+                                alt="{{ user.name }}"
+                                class="avatar"
+                            >
+                        </td>
+
+                        <td>{{ user.name }}</td>
+
+                        <td class="email">
+                            {{ user.email }}
+                        </td>
+
+                        <td>
+                            {{ user.mobile_number }}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <a
+                                    href="/View/{{ user.id }}"
+                                    class="action-link"
+                                >
+                                    View
+                                </a>
+
+                                <a
+                                    href="/Edit/{{ user.id }}"
+                                    class="action-link"
+                                >
+                                    Edit
+                                </a>
+
+                                <a
+                                    href="/Delete/{{ user.id }}"
+                                    class="action-link"
+                                >
+                                    Delete
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+
+            <h2>No users found</h2>
+
+            <p>
+                There are currently no registered users.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
 {% endblock %}
